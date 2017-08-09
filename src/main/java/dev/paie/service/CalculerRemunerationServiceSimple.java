@@ -16,6 +16,9 @@ import dev.paie.entite.Grade;
 import dev.paie.entite.ResultatCalculRemuneration;
 import dev.paie.util.PaieUtils;
 
+/** Implémentation de {@link CalculerRemunerationService}
+ * @author DIGINAMIC
+ */
 @Service
 public class CalculerRemunerationServiceSimple implements CalculerRemunerationService {
 
@@ -29,8 +32,11 @@ public class CalculerRemunerationServiceSimple implements CalculerRemunerationSe
 		ResultatCalculRemuneration remu = new ResultatCalculRemuneration();
 		Grade grade = bulletin.getRemunerationEmploye().getGrade();
 
+		// SALAIRE_BASE = GRADE.NB_HEURES_BASE * GRADE.TAUX_BASE
 		BigDecimal salaireBase = grade.getNbHeuresBase().multiply(grade.getTauxBase());
-		BigDecimal salaireBrut = salaireBase.add(BigDecimal.valueOf(bulletin.getPrimeExceptionnelle()));
+		
+		// SALAIRE_BRUT = SALAIRE_BASE + PRIME_EXCEPTIONNELLE
+		BigDecimal salaireBrut = salaireBase.add(bulletin.getPrimeExceptionnelle());
 
 		BigDecimal totalRetenueSalariale = BigDecimal.ZERO;
 		BigDecimal totalCotisationsPatronales = BigDecimal.ZERO;
@@ -39,15 +45,21 @@ public class CalculerRemunerationServiceSimple implements CalculerRemunerationSe
 				.getCotisationsNonImposables().stream()) {
 			
 			BinaryOperator<BigDecimal> binaryOperator = BigDecimal::add;
+			
+			// TOTAL_RETENUE_SALARIALE = SOMME(COTISATION_NON_IMPOSABLE.TAUX_SALARIAL*SALAIRE_BRUT)
 			totalRetenueSalariale = cotisationsNonImposables.filter(c -> c.getTauxSalarial() != null)
 														    .map(c -> c.getTauxSalarial().multiply(salaireBrut))
-														    .reduce(BigDecimal.ZERO, binaryOperator);
+														    .reduce(binaryOperator)
+														    .orElse(BigDecimal.ZERO);
 		}
 
 		try (Stream<Cotisation> cotisationsNonImposables = bulletin.getRemunerationEmploye().getProfilRemuneration()
 				.getCotisationsNonImposables().stream()) {
 
 			BinaryOperator<BigDecimal> binaryOperator = BigDecimal::add;
+			
+			// TOTAL_COTISATIONS_PATRONALES =
+			//		SOMME(COTISATION_NON_IMPOSABLE.TAUX_PATRONAL*SALAIRE_BRUT)
 			totalCotisationsPatronales = cotisationsNonImposables.filter(c -> c.getTauxPatronal() != null)
 																 .map(c -> c.getTauxPatronal().multiply(salaireBrut))
 																 .reduce(BigDecimal.ZERO, binaryOperator);
@@ -60,17 +72,23 @@ public class CalculerRemunerationServiceSimple implements CalculerRemunerationSe
 
 			totalCotisationsImposables = cotisationsImposables.filter(c -> c.getTauxSalarial() != null)
 															  .map(c -> c.getTauxSalarial().multiply(salaireBrut))
-															  .reduce(BigDecimal.ZERO, BigDecimal::add);
+															  .reduce(BigDecimal::add)
+															  .orElse(BigDecimal.ZERO);
 		}
 
-		BigDecimal netImposable = salaireBrut.subtract(totalRetenueSalariale);
-		BigDecimal netAPayer = netImposable.subtract(totalCotisationsImposables);
-
+		
 		remu.setSalaireDeBase(paieUtils.formaterBigDecimal(salaireBase));
 		remu.setSalaireBrut(paieUtils.formaterBigDecimal(salaireBrut));
 		remu.setTotalRetenueSalarial(paieUtils.formaterBigDecimal(totalRetenueSalariale));
 		remu.setTotalCotisationsPatronales(paieUtils.formaterBigDecimal(totalCotisationsPatronales));
+		
+		// NET_IMPOSABLE = SALAIRE_BRUT - TOTAL_RETENUE_SALARIALE
+		BigDecimal netImposable = new BigDecimal(remu.getSalaireBrut()).subtract(new BigDecimal(remu.getTotalRetenueSalarial()));
 		remu.setNetImposable(paieUtils.formaterBigDecimal(netImposable));
+		
+		// NET_A_PAYER = NET_IMPOSABLE - SOMME(COTISATION_IMPOSABLE.TAUX_SALARIAL*SALAIRE_BRUT)
+		BigDecimal netAPayer = new BigDecimal(remu.getNetImposable()).subtract(totalCotisationsImposables);
+
 		remu.setNetAPayer(paieUtils.formaterBigDecimal(netAPayer));
 		return remu;
 	}
