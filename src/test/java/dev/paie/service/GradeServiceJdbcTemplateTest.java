@@ -22,7 +22,7 @@ import dev.paie.spring.DataSourceMySQLConfig;
 
 @ContextConfiguration(classes = { ServicesConfig.class, JeuxDeDonneesConfig.class, DataSourceMySQLConfig.class })
 @RunWith(SpringRunner.class)
-public class GradeServiceJdbcTemplateTest {
+public class GradeServiceJdbcTemplateTest extends AbstractTest {
 
 	@Autowired
 	private GradeService gradeService;
@@ -30,7 +30,7 @@ public class GradeServiceJdbcTemplateTest {
 	@Test
 	public void test_sauvegarder_lister_mettre_a_jour() {
 		
-		String nvCode = getRandomCode();
+		String nvCode = getRandomCode("E");
 		BigDecimal nbHeuresBase = getRandom(139);
 		BigDecimal tauxBase = getRandom(50.0);
 
@@ -57,17 +57,5 @@ public class GradeServiceJdbcTemplateTest {
 			}
 		}
 		assertTrue("Le grade de code "+grade.getCode()+" n'a pas été inséré ou mis à jour en base", insertOrUpdate);
-	}
-
-	public String getRandomCode() {
-		return "E"+round(random()*10);
-	}
-	
-	public BigDecimal getRandom(int base) {
-		return new BigDecimal(round(random()*base));
-	}
-	
-	public BigDecimal getRandom(double base) {
-		return new BigDecimal(random()*base);
 	}
 }
