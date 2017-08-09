@@ -8,12 +8,17 @@ import org.springframework.stereotype.Controller;
 import dev.paie.entite.Cotisation;
 import dev.paie.repository.CotisationRepository;
 
+/** Controller permettant de prendre en charge l'affichage de toutes les cotisations
+ * @author DIGINAMIC
+ */
 @Controller
 public class ListerCotisationsOptionMenu extends OptionMenu {
 
+	/** cotisationRepository : CotisationRepository */
 	private CotisationRepository cotisationRepository;
 
-	/** Constructeur
+	/** Constructeur Autowired
+	 * @param cotisationRepository permet de gérer la persistence des cotisations
 	 */
 	@Autowired
 	public ListerCotisationsOptionMenu(CotisationRepository cotisationRepository) {

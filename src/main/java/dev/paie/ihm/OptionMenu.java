@@ -2,21 +2,27 @@ package dev.paie.ihm;
 
 import dev.paie.exception.StockageException;
 
-public abstract class OptionMenu implements Comparable<OptionMenu>{
+/** Représente une option de menu de l'application console
+ * @author DIGINAMIC
+ */
+public abstract class OptionMenu {
 	
+	/** libelle : String */
 	protected String libelle;
 
-
+	/**
+	 * Consrructeur
+	 */
 	public OptionMenu() {
 		super();
 	}
 	
+	/** Exécution du cas d'utilisation de l'option de menu
+	 * @return boolean
+	 * @throws StockageException en cas d'erreur de persistence
+	 */
 	public abstract boolean execute() throws StockageException;
-	
-	public int compareTo(OptionMenu optionMenu) {
-		return optionMenu.getLibelle().compareTo(libelle);
-	}
-	
+
 	/**
 	 * @param libelle the libelle to set
 	 */

@@ -12,13 +12,22 @@ import dev.paie.entite.Cotisation;
 import dev.paie.exception.StockageException;
 import dev.paie.repository.CotisationRepository;
 
+/** Controller permettant de prendre en charge l'ajout d'une cotisation
+ * @author DIGINAMIC
+ */
 @Controller
 public class AjouterCotisationOptionMenu extends OptionMenu {
 	
+	/** cotisationRepository : CotisationRepository */
 	private CotisationRepository cotisationRepository;
 	
+	/** scanner : Scanner */
 	private Scanner scanner;
 
+	/** Constructeur Autowired
+	 * @param cotisationRepository permet de gérer la persistence des cotisations
+	 * @param scanner permet de poser des questions à l'utilisateur
+	 */
 	@Autowired
 	public AjouterCotisationOptionMenu(CotisationRepository cotisationRepository, Scanner scanner) {
 		this.cotisationRepository = cotisationRepository;
@@ -30,8 +39,11 @@ public class AjouterCotisationOptionMenu extends OptionMenu {
 		return "Ajouter une cotisation";
 	}
 
+	/* Le @Transactional n'est pas nécessaire ici. Il est géré par le repository. 
+	 * Si besoin de faire plusieurs opérations, faire une couche de services
+	 * @see dev.paie.ihm.OptionMenu#execute()
+	 */
 	@Override
-	// Le transactional est fait par le repository. Si besoin, faire une couche de services
 	public boolean execute() throws StockageException {
 		
 		System.out.println("Veuillez saisir un code:");
