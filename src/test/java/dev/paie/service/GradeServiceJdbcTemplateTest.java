@@ -21,8 +21,6 @@ import dev.paie.entite.Grade;
 import dev.paie.spring.DataSourceMySQLConfig;
 
 @ContextConfiguration(classes = { ServicesConfig.class, JeuxDeDonneesConfig.class, DataSourceMySQLConfig.class })
-// Configuration JUnit pour que Spring prenne la main sur le cycle de vie du
-// test
 @RunWith(SpringRunner.class)
 public class GradeServiceJdbcTemplateTest {
 
@@ -38,8 +36,10 @@ public class GradeServiceJdbcTemplateTest {
 
 		Grade grade = new Grade(nvCode, nbHeuresBase, tauxBase);
 		
-		boolean insertOrUpdate = false;
 		List<Grade> grades = gradeService.lister();
+		assertTrue("Aucun grade en base de données", !grades.isEmpty());
+		
+		boolean insertOrUpdate = false;
 		try (Stream<Grade> stream = grades.stream()){
 			List<Grade> gradesByCode = stream.filter(g -> g.getCode().equals(nvCode)).collect(Collectors.toList());
 			if (gradesByCode.isEmpty()){
