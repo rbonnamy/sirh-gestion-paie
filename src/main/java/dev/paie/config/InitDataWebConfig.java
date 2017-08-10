@@ -1,5 +1,6 @@
 package dev.paie.config;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
@@ -7,7 +8,7 @@ import org.springframework.context.annotation.ImportResource;
  * @author DIGINAMIC
  */
 @Configuration
-@ImportResource("classpath:jdd-config.xml")
-public class JeuxDeDonneesConfig {
-	
+@ImportResource("classpath:init-data-web.xml")
+public class InitDataWebConfig {
+
 }

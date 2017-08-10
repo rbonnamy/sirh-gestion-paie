@@ -18,9 +18,6 @@ public class ApplicationConsoleApp {
 
 			Menu menu  = context.getBean(Menu.class);
 			menu.manage();
-			
 		}
-
 	}
-
 }
