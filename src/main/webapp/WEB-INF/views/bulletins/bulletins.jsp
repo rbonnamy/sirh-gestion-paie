@@ -6,10 +6,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Liste des bulletins</title>
-<link rel="stylesheet"
-	href="/paie/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-<script src="/paie/jquery/jquery-3.2.1.min.js"></script>
-<script src="/paie/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="<c:url value='/bootstrap-3.3.7-dist/css/bootstrap.min.css'></c:url>">
+<script src="<c:url value='/jquery/jquery-3.2.1.min.js'></c:url>"></script>
+<script src="<c:url value='/bootstrap-3.3.7-dist/js/bootstrap.min.js'></c:url>"></script>
 </head>
 <body>
 	<nav class="navbar navbar-default">

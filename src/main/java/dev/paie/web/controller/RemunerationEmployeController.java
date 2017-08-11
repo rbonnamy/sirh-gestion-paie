@@ -2,9 +2,8 @@ package dev.paie.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,6 +35,7 @@ public class RemunerationEmployeController {
 	private RemunerationEmployeService remunerationEmployeService;
 	
 	@RequestMapping(method = RequestMethod.GET, path = "/creer")
+	@Secured("ROLE_ADMINISTRATEUR")
 	public ModelAndView creerEmploye() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("entreprises", entrepriseRepository.findAll());
@@ -45,6 +45,7 @@ public class RemunerationEmployeController {
 		return mv;
 	}
 	
+	@Secured("ROLE_ADMINISTRATEUR")
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, path = "/validerCreer")
 	public ModelAndView validerCreerEmploye( RemunerationEmployeView employeView) {
 		
@@ -56,6 +57,7 @@ public class RemunerationEmployeController {
 		return mv;
 	}
 	
+	@Secured({"ROLE_ADMINISTRATEUR", "ROLE_UTILISATEUR"})
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView listeEmployes() {
 		ModelAndView mv = new ModelAndView();

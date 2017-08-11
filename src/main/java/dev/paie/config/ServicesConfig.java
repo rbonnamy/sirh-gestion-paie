@@ -17,7 +17,7 @@ import dev.paie.spring.JpaConfig;
  * @author DIGINAMIC
  */
 @Configuration
-@ComponentScan(basePackages={"dev.paie.service", "dev.paie.util"})
+@ComponentScan(basePackages={"dev.paie.service", "dev.paie.factory", "dev.paie.util"})
 @Import({JpaConfig.class, DataSourceMySQLConfig.class})
 @EnableJpaRepositories({"dev.paie.repository"})
 @EnableTransactionManagement

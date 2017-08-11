@@ -2,6 +2,7 @@ package dev.paie.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,7 @@ public class BulletinSalaireController {
 	private RemunerationEmployeRepository employeRepository;
 	
 	@RequestMapping(method = RequestMethod.GET, path = "/creer")
+	@Secured("ROLE_ADMINISTRATEUR")
 	public ModelAndView creerBulletin() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("employes", employeRepository.findAll());
@@ -37,6 +39,7 @@ public class BulletinSalaireController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, path = "/detail")
+	@Secured({"ROLE_ADMINISTRATEUR", "ROLE_UTILISATEUR"})
 	public ModelAndView detailBulletin(@RequestParam("id") int id) {
 		ModelAndView mv = new ModelAndView();
 		
@@ -47,6 +50,7 @@ public class BulletinSalaireController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, path = "/validerCreer")
+	@Secured("ROLE_ADMINISTRATEUR")
 	public ModelAndView validerCreerBulletin(BulletinSalaireView bulletinView) {
 		
 		bulletinSalaireService.creerBulletin(bulletinView);
@@ -58,6 +62,7 @@ public class BulletinSalaireController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
+	@Secured({"ROLE_ADMINISTRATEUR", "ROLE_UTILISATEUR"})
 	public ModelAndView listeBulletins() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("bulletins/bulletins");
